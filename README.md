@@ -37,10 +37,6 @@ jobs:
           project_name: Slack notification action
 ```
 
-Result:
-
-<img width="555" alt="image" src="https://user-images.githubusercontent.com/537363/218570780-bb78a8aa-d2dc-43f9-9c3a-161160b9f073.png">
-
 ## Build the action
 
 Install dependencies
