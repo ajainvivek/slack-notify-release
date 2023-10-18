@@ -1,23 +1,29 @@
 name: 'slack-notify-release'
 description: 'A simple GitHub action to post a Slack message when a new version is released.'
-author: 'brainfish'
+author: 'ajainvivek'
 
 inputs:
+  project_name:
+    description: 'Project name to display'
+    required: true
+  github_token:
+    description: 'GitHub token'
+    required: true
   slack_token:
     description: 'Slack token'
     required: true
   channel_id:
     description: 'Channel ID'
     required: true
-  project_name:
-    description: 'Project name to display'
-    required: true
 
 outputs:
   status:
     description: 'The status of message sent'
-  license:
-    description: 'The license used in the repository'
+  release_author:
+    description: 'The author of the release'
+  version:
+    description: 'The version of the release'
+  
 
 runs:
   using: 'node16'

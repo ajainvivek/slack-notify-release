@@ -8,14 +8,28 @@ const main = async () => {
   const tags = (await currentRepoGit.tags({'--sort' : 'taggerdate'})).all
 
   const version = tags.pop()
-  const releaseName = github.event.release.name
-  const releaseBody = github.event.release.body
   const repoName = github.context.payload.repository.full_name
   const changelogUrl = `https://github.com/${repoName}/releases/tag/${version}`
   
   const slackToken = core.getInput('slack_token')
   const channelId = core.getInput('channel_id')
   const projectName = core.getInput('project_name')
+  const githubToken = core.getInput('github_token')
+  
+
+  // Get authenticated GitHub client (Ocktokit): https://github.com/actions/toolkit/tree/master/packages/github#usage
+  const octokit = github.getOctokit(githubToken)
+  const { data: release } = await octokit.repos.getReleaseByTag({
+    ...github.context.repo,
+    tag: version,
+  })
+
+  const releaseName = release.name
+  const releaseBody = release.body
+  const releaseAuthor = release.author
+
+  core.setOutput('version', version)
+  core.setOutput('release_author', releaseAuthor.login)
   
   const payload = JSON.stringify({
     channel: channelId,
@@ -26,6 +40,7 @@ const main = async () => {
         text : `
           *Release name*: ${releaseName}
           *Release body*: ${releaseBody}
+          *Release author*: ${releaseAuthor.login}
           *Changelog*: ${changelogUrl}
         `,
       },

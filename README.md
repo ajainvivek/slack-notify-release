@@ -6,6 +6,8 @@ A simple GitHub action to post a Slack message when a new version is released.
 
 The following inputs briefly explained here are fully declared and documented in the [action.yaml](action.yaml):
 
+* `github_token` [**Required**] - GitHub token
+
 * `slack_token` [**Required**] - Slack token
 
 * `channel_id` [**Required**] - Channel ID where to post (shown in 'channel details', e.g. 'C03AA0A0A3A')
@@ -32,9 +34,10 @@ jobs:
       - name: Notify new release on Slack
         uses: brainfish-ai/slack-notify-release
         with:
-          slack_token: ${{ secrets.ORG_SLACK_TOKEN }}
-          channel_id: C052E2TRJSJ
-          project_name: Slack notification action
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          slack_token: ${{ secrets.SLACK_TOKEN }}
+          channel_id: C03AA0A0A3A
+          project_name: My Project
 ```
 
 ## Build the action
