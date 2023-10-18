@@ -30,7 +30,7 @@ jobs:
           fetch-depth: 0
           ref: main
       - name: Notify new release on Slack
-        uses: brainfish-ai/slack-notify-release-action
+        uses: brainfish-ai/slack-notify-release
         with:
           slack_token: ${{ secrets.ORG_SLACK_TOKEN }}
           channel_id: C052E2TRJSJ
