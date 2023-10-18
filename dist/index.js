@@ -15151,6 +15151,8 @@ const main = async () => {
   const tags = (await currentRepoGit.tags({'--sort' : 'taggerdate'})).all
 
   const version = tags.pop()
+  const releaseName = github.event.release.name
+  const releaseBody = github.event.release.body
   const repoName = github.context.payload.repository.full_name
   const changelogUrl = `https://github.com/${repoName}/releases/tag/${version}`
   
@@ -15163,8 +15165,12 @@ const main = async () => {
     token: slackToken,
     attachments: [
       {
-        pretext : `Rilasciata la nuova versione di ${projectName}: ${version}!`,
-        text : `Changelog disponibile qua: ${changelogUrl}`,
+        pretext : `New version of ${projectName}: ${version}!`,
+        text : `
+          *Release name*: ${releaseName}
+          *Release body*: ${releaseBody}
+          *Changelog*: ${changelogUrl}
+        `,
       },
     ],
   })
