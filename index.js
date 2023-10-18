@@ -26,7 +26,7 @@ const main = async () => {
 
   const releaseName = release.name
   const releaseBody = release.body
-  const releaseAuthor = release.author
+  const releaseAuthor = release.author?.login
 
   core.setOutput('version', version)
   core.setOutput('release_author', releaseAuthor)
@@ -36,7 +36,7 @@ const main = async () => {
     token: slackToken,
     attachments: [
       {
-        pretext : `New version of ${projectName}: ${version}!`,
+        pretext : `🎉 New version of ${projectName}:${version} has been released!`,
         text : `
           *Release name*: ${releaseName}
           *Release body*: ${releaseBody}
