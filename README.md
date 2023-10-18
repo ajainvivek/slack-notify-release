@@ -32,8 +32,8 @@ jobs:
       - name: Notify new release on Slack
         uses: brainfish-ai/slack-notify-release-action
         with:
-          slack_token: ${{ secrets.SLACK_TOKEN }}
-          channel_id: C03AA0A0A3A
+          slack_token: ${{ secrets.ORG_SLACK_TOKEN }}
+          channel_id: C052E2TRJSJ
           project_name: Slack notification action
 ```
 
