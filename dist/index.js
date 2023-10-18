@@ -15162,7 +15162,7 @@ const main = async () => {
 
   // Get authenticated GitHub client (Ocktokit): https://github.com/actions/toolkit/tree/master/packages/github#usage
   const octokit = github.getOctokit(githubToken)
-  const { data: release } = await octokit.repos.getReleaseByTag({
+  const { data: release } = await octokit.rest.repos.getReleaseByTag({
     ...github.context.repo,
     tag: version,
   })
