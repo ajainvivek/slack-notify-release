@@ -19,12 +19,7 @@ inputs:
 outputs:
   status:
     description: 'The status of message sent'
-  release_author:
-    description: 'The author of the release'
-  version:
-    description: 'The version of the release'
   
-
 runs:
   using: 'node16'
   main: 'dist/index.js'
