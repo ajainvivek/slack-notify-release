@@ -40,7 +40,6 @@ const main = async () => {
         text : `
           *Release name*: ${releaseName}
           *Release body*: ${releaseBody}
-          *Release author*: ${releaseAuthor.name} <${releaseAuthor.email}>
           *Changelog*: ${changelogUrl}
         `,
       },
