@@ -24,6 +24,7 @@ const main = async () => {
   const releaseBody = latestRelease.body
   const releaseAuthor = latestRelease.author
 
+  // Get the changelog URL
   const repoName = github.context.payload.repository.full_name
   const changelogUrl = `https://github.com/${repoName}/releases/tag/${latestReleaseTag}`
   
