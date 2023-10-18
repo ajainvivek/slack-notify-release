@@ -15169,10 +15169,6 @@ const main = async () => {
 
   const releaseName = release.name
   const releaseBody = release.body
-  const releaseAuthor = release.author
-
-  core.setOutput('version', version)
-  core.setOutput('release_author', releaseAuthor?.login)
   
   const payload = JSON.stringify({
     channel: channelId,
@@ -15184,7 +15180,6 @@ const main = async () => {
           *Release name*: ${releaseName}
           *Release body*: ${releaseBody}
           *Changelog*: ${changelogUrl}
-          ${releaseAuthor?.login ? `*Release author*: ${releaseAuthor?.login}` : ''}
         `,
       },
     ],
