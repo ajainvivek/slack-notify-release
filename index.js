@@ -1,32 +1,31 @@
 const core = require('@actions/core')
 const github = require('@actions/github')
 const https = require('https')
-const simpleGit = require('simple-git');
 
 const main = async () => {
-  const currentRepoGit = simpleGit();
-  const tags = (await currentRepoGit.tags({'--sort' : 'taggerdate'})).all
-
-  const version = tags.pop()
-  const repoName = github.context.payload.repository.full_name
-  const changelogUrl = `https://github.com/${repoName}/releases/tag/${version}`
-  
   const slackToken = core.getInput('slack_token')
   const channelId = core.getInput('channel_id')
   const projectName = core.getInput('project_name')
   const githubToken = core.getInput('github_token')
-  
+
+  // Get owner and repo from context of payload that triggered the action
+  const { owner, repo } = github.context.repo
 
   // Get authenticated GitHub client (Ocktokit): https://github.com/actions/toolkit/tree/master/packages/github#usage
   const octokit = github.getOctokit(githubToken)
-  const { data: release } = await octokit.rest.repos.getReleaseByTag({
-    ...github.context.repo,
-    tag: version,
-  })
 
-  const releaseName = release.name
-  const releaseBody = release.body
-  const releaseAuthor = release.author
+  // Get the latest release
+  const { data: latestRelease } = await octokit.rest.repos.getLatestRelease({
+    owner,
+    repo,
+  })
+  const latestReleaseTag = latestRelease.tag_name
+  const releaseName = latestRelease.name
+  const releaseBody = latestRelease.body
+  const releaseAuthor = latestRelease.author
+
+  const repoName = github.context.payload.repository.full_name
+  const changelogUrl = `https://github.com/${repoName}/releases/tag/${latestReleaseTag}`
   
   const payload = JSON.stringify({
     channel: channelId,
