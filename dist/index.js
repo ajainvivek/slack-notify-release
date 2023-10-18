@@ -15179,7 +15179,7 @@ const main = async () => {
     token: slackToken,
     attachments: [
       {
-        pretext : `🎉 New version of ${projectName}:${version} has been released!`,
+        pretext : `New version of ${projectName}:${version} has been released!`,
         text : `
           *Release name*: ${releaseName}
           *Release body*: ${releaseBody}
