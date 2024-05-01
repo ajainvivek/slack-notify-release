@@ -9783,6 +9783,7 @@ const main = async () => {
   const channelId = core.getInput('channel_id')
   const projectName = core.getInput('project_name')
   const githubToken = core.getInput('github_token')
+  const inputRepoName = core.getInput('repo_name')
 
   // Get owner and repo from context of payload that triggered the action
   const { owner, repo } = github.context.repo
@@ -9800,7 +9801,8 @@ const main = async () => {
   const releaseBody = latestRelease.body
   const releaseAuthor = latestRelease.author
 
-  const repoName = github.context.payload.repository.full_name
+  // Get the changelog URL
+  const repoName = inputRepoName || github.context.payload.repository.full_name
   const changelogUrl = `https://github.com/${repoName}/releases/tag/${latestReleaseTag}`
   
   const payload = JSON.stringify({
