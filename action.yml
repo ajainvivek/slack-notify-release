@@ -15,6 +15,9 @@ inputs:
   channel_id:
     description: 'Channel ID'
     required: true
+  repo_owner_name:
+    description: 'Repository owner name'
+    required: false
   repo_name:
     description: 'Repository name'
     required: false
@@ -24,7 +27,7 @@ outputs:
     description: 'The status of message sent'
   
 runs:
-  using: 'node16'
+  using: 'node20'
   main: 'dist/index.js'
 
 branding:

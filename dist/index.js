@@ -9778,11 +9778,19 @@ const core = __nccwpck_require__(2186)
 const github = __nccwpck_require__(5438)
 const https = __nccwpck_require__(5687)
 
+const truncateString = (string, limit) => {
+  if (string.length > limit) {
+    return string.substring(0, limit) + '...'
+  }
+  return string
+}
+
 const main = async () => {
   const slackToken = core.getInput('slack_token')
   const channelId = core.getInput('channel_id')
   const projectName = core.getInput('project_name')
   const githubToken = core.getInput('github_token')
+  const inputOwnerName = core.getInput('repo_owner_name')
   const inputRepoName = core.getInput('repo_name')
 
   // Get owner and repo from context of payload that triggered the action
@@ -9793,17 +9801,22 @@ const main = async () => {
 
   // Get the latest release
   const { data: latestRelease } = await octokit.rest.repos.getLatestRelease({
-    owner,
-    repo,
+    owner: inputOwnerName || owner,
+    repo: inputRepoName || repo,
   })
+
+  core.info(`releaseBody: ${latestRelease.body}`)
+  core.info(`releaseBodyLength: ${latestRelease.body.length}`)
+
   const latestReleaseTag = latestRelease.tag_name
   const releaseName = latestRelease.name
-  const releaseBody = latestRelease.body
+  const releaseBody = truncateString(latestRelease.body, 500)
   const releaseAuthor = latestRelease.author
 
   // Get the changelog URL
-  const repoName = inputRepoName || github.context.payload.repository.full_name
-  const changelogUrl = `https://github.com/${repoName}/releases/tag/${latestReleaseTag}`
+  const changelogUrl = `https://github.com/${inputOwnerName||owner}/${inputRepoName||repo}/releases/tag/${latestReleaseTag}`
+
+  core.info(`changelogUrl: ${changelogUrl}`)
   
   const payload = JSON.stringify({
     channel: channelId,
@@ -9820,6 +9833,8 @@ ${releaseAuthor?.login ? `*Release author*: ${releaseAuthor?.login}` : ''}
       },
     ],
   })
+
+  core.info(`payload: ${payload}`)
   
   const requestOptions = {
     method: 'POST',
