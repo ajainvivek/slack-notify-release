@@ -28,6 +28,8 @@ const main = async () => {
   // Get the changelog URL
   const repoName = inputRepoName || github.context.payload.repository.full_name
   const changelogUrl = `https://github.com/${repoName}/releases/tag/${latestReleaseTag}`
+
+  core.info(`changelogUrl: ${changelogUrl}`)
   
   const payload = JSON.stringify({
     channel: channelId,
@@ -44,6 +46,8 @@ ${releaseAuthor?.login ? `*Release author*: ${releaseAuthor?.login}` : ''}
       },
     ],
   })
+
+  core.info(`payload: ${payload}`)
   
   const requestOptions = {
     method: 'POST',
