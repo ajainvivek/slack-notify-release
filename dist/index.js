@@ -9778,6 +9778,13 @@ const core = __nccwpck_require__(2186)
 const github = __nccwpck_require__(5438)
 const https = __nccwpck_require__(5687)
 
+const truncateString = (string, limit) => {
+  if (string.length > limit) {
+    return string.substring(0, limit) + '...'
+  }
+  return string
+}
+
 const main = async () => {
   const slackToken = core.getInput('slack_token')
   const channelId = core.getInput('channel_id')
@@ -9797,9 +9804,13 @@ const main = async () => {
     owner: inputOwnerName || owner,
     repo: inputRepoName || repo,
   })
+
+  core.info(`releaseBody: ${latestRelease.body}`)
+  core.info(`releaseBodyLength: ${latestRelease.body.length}`)
+
   const latestReleaseTag = latestRelease.tag_name
   const releaseName = latestRelease.name
-  const releaseBody = latestRelease.body
+  const releaseBody = truncateString(latestRelease.body, 500)
   const releaseAuthor = latestRelease.author
 
   // Get the changelog URL

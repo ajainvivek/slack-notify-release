@@ -2,6 +2,13 @@ const core = require('@actions/core')
 const github = require('@actions/github')
 const https = require('https')
 
+const truncateString = (string, limit) => {
+  if (string.length > limit) {
+    return string.substring(0, limit) + '...'
+  }
+  return string
+}
+
 const main = async () => {
   const slackToken = core.getInput('slack_token')
   const channelId = core.getInput('channel_id')
@@ -21,9 +28,10 @@ const main = async () => {
     owner: inputOwnerName || owner,
     repo: inputRepoName || repo,
   })
+
   const latestReleaseTag = latestRelease.tag_name
   const releaseName = latestRelease.name
-  const releaseBody = latestRelease.body
+  const releaseBody = truncateString(latestRelease.body, 500)
   const releaseAuthor = latestRelease.author
 
   // Get the changelog URL
