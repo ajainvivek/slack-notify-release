@@ -9783,6 +9783,7 @@ const main = async () => {
   const channelId = core.getInput('channel_id')
   const projectName = core.getInput('project_name')
   const githubToken = core.getInput('github_token')
+  const inputOwnerName = core.getInput('repo_owner_name')
   const inputRepoName = core.getInput('repo_name')
 
   // Get owner and repo from context of payload that triggered the action
@@ -9793,8 +9794,8 @@ const main = async () => {
 
   // Get the latest release
   const { data: latestRelease } = await octokit.rest.repos.getLatestRelease({
-    owner,
-    repo,
+    owner: inputOwnerName || owner,
+    repo: inputRepoName || repo,
   })
   const latestReleaseTag = latestRelease.tag_name
   const releaseName = latestRelease.name
@@ -9802,8 +9803,7 @@ const main = async () => {
   const releaseAuthor = latestRelease.author
 
   // Get the changelog URL
-  const repoName = inputRepoName || github.context.payload.repository.full_name
-  const changelogUrl = `https://github.com/${repoName}/releases/tag/${latestReleaseTag}`
+  const changelogUrl = `https://github.com/${inputOwnerName||owner}/${inputRepoName||repo}/releases/tag/${latestReleaseTag}`
 
   core.info(`changelogUrl: ${changelogUrl}`)
   
