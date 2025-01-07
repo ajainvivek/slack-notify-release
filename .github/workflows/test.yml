@@ -15,3 +15,5 @@ jobs:
           slack_token: ${{ secrets.SLACK_TOKEN }}
           channel_id: ${{ secrets.SLACK_CHANNEL }}
           project_name: Slack notification action
+          repo_owner_name: ajainvivek
+          repo_name: slack-notify-release
