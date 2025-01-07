@@ -2,12 +2,17 @@ const core = require('@actions/core')
 const github = require('@actions/github')
 const https = require('https')
 
-const truncateString = (string, limit) => {
+const processString = (string, limit) => {
+  // truncate string if it's longer than the limit
   if (string.length > limit) {
-    return string.substring(0, limit) + '...'
+    string = string.substring(0, limit) + "...";
   }
-  return string
-}
+
+  // Slack API does not support horizontal ellipsis (…), so we need to remove them
+  string = string.replace(/…/g, "...");
+
+  return string;
+};
 
 const main = async () => {
   const slackToken = core.getInput('slack_token')
@@ -31,7 +36,7 @@ const main = async () => {
 
   const latestReleaseTag = latestRelease.tag_name
   const releaseName = latestRelease.name
-  const releaseBody = truncateString(latestRelease.body, 500)
+  const releaseBody = processString(latestRelease.body, 500)
   const releaseAuthor = latestRelease.author
 
   // Get the changelog URL
