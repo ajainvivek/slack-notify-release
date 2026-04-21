@@ -21,6 +21,9 @@ inputs:
   repo_name:
     description: 'Repository name'
     required: false
+  release_tag:
+    description: 'Git tag for the release to announce (for example v1.2.0). When omitted, the latest release is used.'
+    required: false
 
 outputs:
   status:

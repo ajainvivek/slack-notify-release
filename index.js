@@ -21,26 +21,35 @@ const main = async () => {
   const githubToken = core.getInput('github_token')
   const inputOwnerName = core.getInput('repo_owner_name')
   const inputRepoName = core.getInput('repo_name')
+  const releaseTagInput = core.getInput('release_tag').trim()
 
   // Get owner and repo from context of payload that triggered the action
   const { owner, repo } = github.context.repo
 
+  const resolvedOwner = inputOwnerName || owner
+  const resolvedRepo = inputRepoName || repo
+
   // Get authenticated GitHub client (Ocktokit): https://github.com/actions/toolkit/tree/master/packages/github#usage
   const octokit = github.getOctokit(githubToken)
 
-  // Get the latest release
-  const { data: latestRelease } = await octokit.rest.repos.getLatestRelease({
-    owner: inputOwnerName || owner,
-    repo: inputRepoName || repo,
-  })
+  const { data: release } = releaseTagInput
+    ? await octokit.rest.repos.getReleaseByTag({
+        owner: resolvedOwner,
+        repo: resolvedRepo,
+        tag: releaseTagInput,
+      })
+    : await octokit.rest.repos.getLatestRelease({
+        owner: resolvedOwner,
+        repo: resolvedRepo,
+      })
 
-  const latestReleaseTag = latestRelease.tag_name
-  const releaseName = latestRelease.name
-  const releaseBody = processString(latestRelease.body, 500)
-  const releaseAuthor = latestRelease.author
+  const releaseTag = release.tag_name
+  const releaseName = release.name
+  const releaseBody = processString(release.body, 500)
+  const releaseAuthor = release.author
 
   // Get the changelog URL
-  const changelogUrl = `https://github.com/${inputOwnerName||owner}/${inputRepoName||repo}/releases/tag/${latestReleaseTag}`
+  const changelogUrl = `https://github.com/${resolvedOwner}/${resolvedRepo}/releases/tag/${releaseTag}`
 
   core.info(`changelogUrl: ${changelogUrl}`)
   
@@ -49,7 +58,7 @@ const main = async () => {
     token: slackToken,
     attachments: [
       {
-        pretext : `New version of ${projectName}: *${latestReleaseTag}* has been released!`,
+        pretext : `New version of ${projectName}: *${releaseTag}* has been released!`,
         text : `
 *Release name*: ${releaseName}
 *Release body*: ${releaseBody}
